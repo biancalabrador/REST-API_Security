@@ -17,16 +17,28 @@ import com.spring.spring_rest.service.CustomUserDetailsService;
 @Configuration 
 public class SecurityConfig {
   
+  // @Bean 
+  // SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
+  //   return security
+  //     .csrf(AbstractHttpConfigurer::disable)
+  //     .authorizeHttpRequests(auth -> auth.anyRequest()
+  //                                        .authenticated())
+  //     .httpBasic(Customizer.withDefaults())
+  //     .build();
+  // }
+  
   @Bean 
   SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
     return security
       .csrf(AbstractHttpConfigurer::disable)
-      .authorizeHttpRequests(auth -> auth.anyRequest()
-                                         .authenticated())
+      .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/api/auth/**").permitAll()
+        .anyRequest().authenticated()
+      )
       .httpBasic(Customizer.withDefaults())
       .build();
   }
-  
+
   private CustomUserDetailsService userDetailsService;
 
   public SecurityConfig(CustomUserDetailsService userDetailsService) {
@@ -47,5 +59,6 @@ public class SecurityConfig {
     throws Exception {
       return authentication.getAuthenticationManager();
     }
+
 
 }
